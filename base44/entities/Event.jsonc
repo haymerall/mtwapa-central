@@ -1,0 +1,55 @@
+{
+  "name": "Event",
+  "type": "object",
+  "properties": {
+    "church_id": {
+      "type": "string",
+      "default": "grace-sda"
+    },
+    "title": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "date": {
+      "type": "string",
+      "format": "date"
+    },
+    "time": {
+      "type": "string"
+    },
+    "end_time": {
+      "type": "string"
+    },
+    "venue": {
+      "type": "string"
+    },
+    "ministry": {
+      "type": "string"
+    },
+    "organizer": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "upcoming",
+        "completed",
+        "cancelled"
+      ],
+      "default": "upcoming"
+    },
+    "registration_required": {
+      "type": "boolean",
+      "default": false
+    },
+    "category": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "title",
+    "date"
+  ]
+}

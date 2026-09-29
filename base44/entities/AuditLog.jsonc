@@ -1,0 +1,34 @@
+{
+  "name": "AuditLog",
+  "type": "object",
+  "properties": {
+    "church_id": {
+      "type": "string",
+      "default": "grace-sda"
+    },
+    "user": {
+      "type": "string"
+    },
+    "role": {
+      "type": "string"
+    },
+    "action": {
+      "type": "string"
+    },
+    "target": {
+      "type": "string"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "details": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "user",
+    "action",
+    "timestamp"
+  ]
+}
