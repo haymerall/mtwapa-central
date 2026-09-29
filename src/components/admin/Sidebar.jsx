@@ -1,9 +1,9 @@
 import { NavLink, Link } from "react-router-dom";
-import { Church as ChurchIcon, LogOut, X, LayoutDashboard, Users, ClipboardCheck, CalendarDays, Megaphone, Wallet, Building2, FileText, BarChart3, ShieldCheck, Settings, Circle } from "lucide-react";
+import { Church as ChurchIcon, LogOut, X, LayoutDashboard, Users, ClipboardCheck, CalendarDays, Megaphone, Wallet, Building2, FileText, BarChart3, ShieldCheck, Settings, Circle, LineChart } from "lucide-react";
 import { modulesForRole, ROLE_LABELS } from "@/lib/roles";
 
 const ICONS = {
-  LayoutDashboard, Users, Church: ChurchIcon, ClipboardCheck, CalendarDays, Megaphone, Wallet, Building2, FileText, BarChart3, ShieldCheck, Settings, Circle,
+  LayoutDashboard, Users, Church: ChurchIcon, ClipboardCheck, CalendarDays, Megaphone, Wallet, Building2, FileText, BarChart3, ShieldCheck, Settings, Circle, LineChart,
 };
 
 export default function Sidebar({ role, session, onLogout, open, onClose }) {

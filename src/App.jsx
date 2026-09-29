@@ -33,6 +33,7 @@ import Attendance from '@/pages/admin/Attendance';
 import EventsAdmin from '@/pages/admin/Events';
 import Communication from '@/pages/admin/Communication';
 import Finance from '@/pages/admin/Finance';
+import TreasuryReports from '@/pages/admin/TreasuryReports';
 import Facilities from '@/pages/admin/Facilities';
 import Documents from '@/pages/admin/Documents';
 import Reports from '@/pages/admin/Reports';
@@ -80,6 +81,7 @@ function App() {
               <Route path="events" element={<EventsAdmin />} />
               <Route path="communication" element={<Communication />} />
               <Route path="finance" element={<Finance />} />
+              <Route path="treasury-reports" element={<TreasuryReports />} />
               <Route path="facilities" element={<Facilities />} />
               <Route path="documents" element={<Documents />} />
               <Route path="reports" element={<Reports />} />

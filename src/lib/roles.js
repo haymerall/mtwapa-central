@@ -44,6 +44,7 @@ export const MODULES = [
   { key: "events", label: "Events", icon: "CalendarDays", path: "/admin/events", roles: ["super_admin", "church_admin", "pastor", "clerk", "ministry_leader"] },
   { key: "communication", label: "Communication", icon: "Megaphone", path: "/admin/communication", roles: ["super_admin", "church_admin", "pastor", "ministry_leader"] },
   { key: "finance", label: "Finance", icon: "Wallet", path: "/admin/finance", roles: ["super_admin", "treasurer"] },
+  { key: "treasury_reports", label: "Treasury Reports", icon: "LineChart", path: "/admin/treasury-reports", roles: ["super_admin", "treasurer"] },
   { key: "facilities", label: "Facilities", icon: "Building2", path: "/admin/facilities", roles: ["super_admin", "church_admin"] },
   { key: "documents", label: "Documents", icon: "FileText", path: "/admin/documents", roles: ["super_admin", "church_admin", "pastor", "clerk", "treasurer"] },
   { key: "reports", label: "Reports", icon: "BarChart3", path: "/admin/reports", roles: ["super_admin", "church_admin", "pastor", "clerk", "treasurer"] },
