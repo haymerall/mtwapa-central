@@ -1,8 +1,8 @@
-// Fictional demo data for Grace Seventh-day Adventist Church.
+// Fictional demo data for Mtwapa Central Seventh-day Adventist Church.
 // All names, contacts, and figures are invented for prototype demonstration.
 
 export const CHURCH = {
-  name: "Grace Seventh-day Adventist Church",
+  name: "Mtwapa Central Seventh-day Adventist Church",
   tagline: "A community of faith, hope, and love",
   address: "123 Riverside Drive, Nairobi, Kenya",
   phone: "+254 700 123 456",

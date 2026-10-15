@@ -17,7 +17,7 @@ export default function Settings() {
           <h2 className="font-heading font-semibold text-foreground mb-1 flex items-center gap-2"><Church className="w-4.5 h-4.5 text-primary" /> Church Profile</h2>
           <p className="text-sm text-muted-foreground mb-5">Basic information about your church.</p>
           <div className="grid sm:grid-cols-2 gap-4">
-            <div className="space-y-1.5"><Label>Church name</Label><Input defaultValue="Grace Seventh-day Adventist Church" /></div>
+            <div className="space-y-1.5"><Label>Church name</Label><Input defaultValue="Mtwapa Central Seventh-day Adventist Church" /></div>
             <div className="space-y-1.5"><Label>Phone</Label><Input defaultValue="+254 700 123 456" /></div>
             <div className="space-y-1.5 sm:col-span-2"><Label>Address</Label><Input defaultValue="123 Riverside Drive, Nairobi, Kenya" /></div>
             <div className="space-y-1.5"><Label>Primary contact email</Label><Input defaultValue="hello@gracesda.org" /></div>

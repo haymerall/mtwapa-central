@@ -34,7 +34,7 @@ export default function Dashboard() {
     <div>
       <PageHeader
         title={`${greeting}, ${session?.name?.split(" ")[0] || "friend"}.`}
-        subtitle={`You're signed in as ${ROLE_LABELS[role]}. Here's what's happening at Grace SDA.`}
+        subtitle={`You're signed in as ${ROLE_LABELS[role]}. Here's what's happening at Mtwapa Central SDA.`}
       />
 
       {/* Stat cards */}

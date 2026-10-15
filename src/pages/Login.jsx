@@ -48,7 +48,7 @@ export default function Login() {
             <div className="w-10 h-10 rounded-lg bg-primary-foreground/15 flex items-center justify-center">
               <ChurchIcon className="w-5 h-5" />
             </div>
-            <span className="font-heading font-bold text-lg">Grace SDA</span>
+            <span className="font-heading font-bold text-lg">Mtwapa Central SDA</span>
           </div>
         </div>
         <div className="relative">
@@ -58,7 +58,7 @@ export default function Login() {
             <ShieldCheck className="w-4 h-4" /> Role-based access · Demo prototype
           </div>
         </div>
-        <div className="relative text-xs text-primary-foreground/40">Grace Seventh-day Adventist Church · Demonstration build</div>
+        <div className="relative text-xs text-primary-foreground/40">Mtwapa Central Seventh-day Adventist Church · Demonstration build</div>
       </div>
 
       {/* Right login panel */}
@@ -68,7 +68,7 @@ export default function Login() {
             <div className="w-10 h-10 rounded-lg bg-primary flex items-center justify-center">
               <ChurchIcon className="w-5 h-5 text-primary-foreground" />
             </div>
-            <span className="font-heading font-bold text-lg text-foreground">Grace SDA</span>
+            <span className="font-heading font-bold text-lg text-foreground">Mtwapa Central SDA</span>
           </div>
 
           <h2 className="font-heading text-2xl font-bold">Welcome back</h2>

@@ -26,7 +26,7 @@ export default function PublicNav() {
               <ChurchIcon className="w-5 h-5 text-primary-foreground" />
             </div>
             <div className="leading-tight">
-              <div className="font-heading font-bold text-foreground text-[15px]">Grace SDA</div>
+              <div className="font-heading font-bold text-foreground text-[15px]">Mtwapa Central SDA</div>
               <div className="text-[10px] text-muted-foreground -mt-0.5 tracking-wide uppercase">Church Platform</div>
             </div>
           </Link>

@@ -19,7 +19,7 @@ export default function Sidebar({ role, session, onLogout, open, onClose }) {
             <ChurchIcon className="w-5 h-5 text-sidebar-primary-foreground" />
           </div>
           <div className="leading-tight">
-            <div className="font-heading font-bold text-sm text-sidebar-foreground">Grace SDA</div>
+            <div className="font-heading font-bold text-sm text-sidebar-foreground">Mtwapa Central SDA</div>
             <div className="text-[10px] text-sidebar-foreground/60 uppercase tracking-wide">Management Platform</div>
           </div>
           <button className="ml-auto md:hidden text-sidebar-foreground/70" onClick={onClose}><X className="w-5 h-5" /></button>
