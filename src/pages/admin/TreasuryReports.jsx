@@ -1,155 +1,75 @@
-import { useMemo } from "react";
-import { useList } from "@/lib/useList";
-import { PageHeader, Card, Badge, StatCard, LoadingState, EmptyState } from "@/components/admin/ui-bits";
-import { formatCurrency } from "@/lib/format";
-import { BarChart3, TrendingUp, TrendingDown, Wallet, Gauge, Building2 } from "lucide-react";
-import { MonthlyFlowChart } from "@/components/admin/treasury/MonthlyFlowChart";
-import { ProjectBudgetChart } from "@/components/admin/treasury/ProjectBudgetChart";
-import { ProjectBudgetList } from "@/components/admin/treasury/ProjectBudgetList";
-
-const MONTH_NAMES = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-
-function monthKey(dateStr) {
-  const d = new Date(dateStr);
-  if (isNaN(d)) return null;
-  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
-}
-function monthLabel(key) {
-  const [, m] = key.split("-");
-  return MONTH_NAMES[parseInt(m, 10) - 1];
-}
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { Building2, ArrowLeft, DollarSign, Users, Calendar, Shield, FileText } from 'lucide-react';
 
 export default function TreasuryReports() {
-  const { data: tx, loading: txLoading } = useList("Transaction", "-date");
-  const { data: projects, loading: pjLoading } = useList("Project", "-updated_date");
-
-  const monthly = useMemo(() => {
-    const map = {};
-    tx.forEach((t) => {
-      const k = monthKey(t.date);
-      if (!k) return;
-      if (!map[k]) map[k] = { month: k, label: monthLabel(k), contributions: 0, expenditures: 0 };
-      if (t.type === "income") map[k].contributions += t.amount || 0;
-      else map[k].expenditures += t.amount || 0;
-    });
-    return Object.values(map)
-      .sort((a, b) => a.month.localeCompare(b.month))
-      .map((m) => ({ ...m, net: m.contributions - m.expenditures }));
-  }, [tx]);
-
-  const totals = useMemo(() => {
-    const income = tx.filter((t) => t.type === "income").reduce((s, t) => s + (t.amount || 0), 0);
-    const expense = tx.filter((t) => t.type === "expense").reduce((s, t) => s + (t.amount || 0), 0);
-    return { income, expense, net: income - expense };
-  }, [tx]);
-
-  const projectData = useMemo(
-    () =>
-      projects.map((p) => {
-        const budget = p.budget || 0;
-        const expenditure = p.expenditure || 0;
-        return {
-          name: p.name,
-          budget,
-          expenditure,
-          remaining: budget - expenditure,
-          pct: budget ? Math.round((expenditure / budget) * 100) : 0,
-          status: p.status,
-          manager: p.manager,
-        };
-      }),
-    [projects]
-  );
-
-  const budgetHealth = useMemo(() => {
-    const totalBudget = projectData.reduce((s, p) => s + p.budget, 0);
-    const totalSpent = projectData.reduce((s, p) => s + p.expenditure, 0);
-    return {
-      totalBudget,
-      totalSpent,
-      remaining: totalBudget - totalSpent,
-      utilization: totalBudget ? Math.round((totalSpent / totalBudget) * 100) : 0,
-      onTrack: projectData.filter((p) => p.pct < 85).length,
-      atRisk: projectData.filter((p) => p.pct >= 85 && p.pct <= 100).length,
-      overBudget: projectData.filter((p) => p.pct > 100).length,
-    };
-  }, [projectData]);
-
-  if (txLoading || pjLoading) return <LoadingState />;
-
   return (
-    <div>
-      <PageHeader
-        title="Treasury Reports"
-        subtitle="Monthly contributions, expenditures & project budget monitoring · Demonstration data"
-        icon={BarChart3}
-      />
-
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-        <StatCard icon={TrendingUp} label="Total Contributions" value={formatCurrency(totals.income)} tone="green" />
-        <StatCard icon={TrendingDown} label="Total Expenditures" value={formatCurrency(totals.expense)} tone="rose" />
-        <StatCard icon={Wallet} label="Net Cash Flow" value={formatCurrency(totals.net)} tone="primary" />
-        <StatCard icon={Gauge} label="Budget Utilization" value={`${budgetHealth.utilization}%`} hint={`${formatCurrency(budgetHealth.totalSpent)} of ${formatCurrency(budgetHealth.totalBudget)}`} tone="accent" />
-      </div>
-
-      <Card className="p-6 mb-6">
-        <h2 className="font-heading font-semibold text-foreground mb-1">Monthly Contributions vs Expenditures</h2>
-        <p className="text-xs text-muted-foreground mb-4">Bars show monthly inflow and outflow; the line tracks net cash flow.</p>
-        {monthly.length ? (
-          <MonthlyFlowChart data={monthly} />
-        ) : (
-          <EmptyState icon={BarChart3} title="No transactions yet" description="Record income and expenses to see monthly trends here." />
-        )}
-      </Card>
-
-      <div className="grid lg:grid-cols-3 gap-6 mb-6">
-        <Card className="lg:col-span-2 p-6">
-          <h2 className="font-heading font-semibold text-foreground mb-1">Project Budgets</h2>
-          <p className="text-xs text-muted-foreground mb-4">Planned budget against actual expenditure per project.</p>
-          {projectData.length ? (
-            <ProjectBudgetChart data={projectData} />
-          ) : (
-            <EmptyState icon={Building2} title="No projects" description="Add projects to monitor their budgets." />
-          )}
-        </Card>
-
-        <Card className="p-6">
-          <h2 className="font-heading font-semibold text-foreground mb-4">Budget Health</h2>
-          <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <span className="text-sm text-muted-foreground">On Track</span>
-              <Badge variant="success">{budgetHealth.onTrack}</Badge>
+    <div className="min-h-screen bg-[#F8FAFC] text-slate-800 font-sans">
+      <header className="bg-[#071322] border-b border-slate-800 text-white p-6 shadow-md">
+        <div className="max-w-7xl mx-auto flex justify-between items-center">
+          <div className="flex items-center gap-3">
+            <div className="bg-[#1e293b] p-2 rounded-xl border border-white/10">
+              <Building2 className="text-amber-500" size={22} />
             </div>
-            <div className="flex items-center justify-between">
-              <span className="text-sm text-muted-foreground">At Risk (85–100%)</span>
-              <Badge variant="warning">{budgetHealth.atRisk}</Badge>
-            </div>
-            <div className="flex items-center justify-between">
-              <span className="text-sm text-muted-foreground">Over Budget</span>
-              <Badge variant="danger">{budgetHealth.overBudget}</Badge>
-            </div>
-            <div className="pt-4 border-t border-border space-y-2">
-              <div className="flex items-center justify-between text-sm">
-                <span className="text-muted-foreground">Total Budget</span>
-                <span className="font-medium text-foreground">{formatCurrency(budgetHealth.totalBudget)}</span>
-              </div>
-              <div className="flex items-center justify-between text-sm">
-                <span className="text-muted-foreground">Total Spent</span>
-                <span className="font-medium text-foreground">{formatCurrency(budgetHealth.totalSpent)}</span>
-              </div>
-              <div className="flex items-center justify-between text-sm">
-                <span className="text-muted-foreground">Remaining</span>
-                <span className="font-medium text-foreground">{formatCurrency(budgetHealth.remaining)}</span>
-              </div>
+            <div>
+              <h1 className="font-bold text-base text-white">Treasury & Finance Admin</h1>
+              <p className="text-[10px] text-slate-400 uppercase font-semibold">Mtwapa Central SDA</p>
             </div>
           </div>
-        </Card>
-      </div>
+          <div className="flex items-center gap-4 text-xs font-semibold">
+            <Link to="/admin/members" className="text-slate-300 hover:text-white">Members</Link>
+            <Link to="/admin/events" className="text-slate-300 hover:text-white">Events</Link>
+            <Link to="/admin/communication" className="text-slate-300 hover:text-white">Broadcast</Link>
+            <Link to="/admin/audit" className="text-slate-300 hover:text-white">Audit Log</Link>
+            <Link to="/admin/settings" className="text-slate-300 hover:text-white">Settings</Link>
+            <Link to="/" className="bg-white/10 px-3 py-1.5 rounded-lg text-white hover:bg-white/20 transition">Exit</Link>
+          </div>
+        </div>
+      </header>
 
-      <Card className="p-6">
-        <h2 className="font-heading font-semibold text-foreground mb-4">Project Budget Breakdown</h2>
-        <ProjectBudgetList data={projectData} />
-      </Card>
+      <main className="max-w-7xl mx-auto px-6 py-12 space-y-8">
+        <div className="grid sm:grid-cols-3 gap-6">
+          <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-2">
+            <p className="text-xs font-bold text-slate-400 uppercase">Total Tithes (October)</p>
+            <div className="text-3xl font-extrabold text-slate-900">KSh 142,500</div>
+            <p className="text-xs font-medium text-emerald-600">+12% from last month</p>
+          </div>
+          <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-2">
+            <p className="text-xs font-bold text-slate-400 uppercase">Combined Offerings</p>
+            <div className="text-3xl font-extrabold text-slate-900">KSh 68,200</div>
+            <p className="text-xs font-medium text-emerald-600">+8% from last month</p>
+          </div>
+          <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-2">
+            <p className="text-xs font-bold text-slate-400 uppercase">Building Fund Balance</p>
+            <div className="text-3xl font-extrabold text-slate-900">KSh 450,000</div>
+            <p className="text-xs font-medium text-blue-600">Sanctuary Project Phase II</p>
+          </div>
+        </div>
+
+        <div className="bg-white p-8 rounded-2xl shadow-sm border border-slate-200 space-y-6">
+          <div className="flex justify-between items-center">
+            <h3 className="text-xl font-bold text-slate-900">Recent Daraja M-Pesa Transactions</h3>
+            <button className="bg-[#071322] text-white text-xs font-bold px-4 py-2.5 rounded-xl hover:bg-[#002B49] transition">
+              Export CSV Report
+            </button>
+          </div>
+          <div className="divide-y divide-slate-100">
+            {[
+              { name: "Elder James Omondi", category: "Tithe", phone: "0712******", amount: "KSh 12,000", time: "10 mins ago" },
+              { name: "Sister Mary Akinyi", category: "Building Fund", phone: "0722******", amount: "KSh 5,000", time: "45 mins ago" },
+              { name: "Brother David Mwangi", category: "Offering", phone: "0733******", amount: "KSh 2,500", time: "2 hours ago" }
+            ].map((tx, idx) => (
+              <div key={idx} className="py-4 flex items-center justify-between">
+                <div>
+                  <p className="font-bold text-slate-900 text-sm">{tx.name} · <span className="text-slate-500 font-normal">{tx.category}</span></p>
+                  <p className="text-xs text-slate-400">Phone: {tx.phone} · {tx.time}</p>
+                </div>
+                <span className="font-extrabold text-emerald-700 text-sm bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200">{tx.amount}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </main>
     </div>
   );
 }

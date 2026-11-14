@@ -1,174 +1,323 @@
-import { Link } from "react-router-dom";
-import { ArrowRight, MapPin, Clock, BookOpen, Heart, Users, CalendarDays, Play, Sparkles } from "lucide-react";
-import { CHURCH, MINISTRIES, EVENTS } from "@/lib/seedData";
-import { formatDate } from "@/lib/format";
-import { Button } from "@/components/ui/button";
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
+import { 
+  Building2, Play, ArrowRight, Clock, Menu, X, Calendar, 
+  Users, BookOpen, Heart, MapPin, DollarSign, Smartphone, CheckCircle2, Music,
+  Shield, Activity, Coins, Radio
+} from 'lucide-react';
 
 export default function Home() {
-  const featured = MINISTRIES.filter((m) => m.featured).slice(0, 4);
-  const upcoming = EVENTS.filter((e) => e.status === "upcoming").slice(0, 3);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [givingTab, setGivingTab] = useState('tithe');
+  const [amount, setAmount] = useState('');
+  const [phone, setPhone] = useState('');
+  const [submitted, setSubmitted] = useState(false);
+
+  const handleMpesaSubmit = (e) => {
+    e.preventDefault();
+    setSubmitted(true);
+    setTimeout(() => setSubmitted(false), 5000);
+  };
 
   return (
-    <div>
-      {/* Hero */}
-      <section className="relative overflow-hidden bg-primary text-primary-foreground">
-        <div className="absolute inset-0 opacity-[0.07]" style={{ backgroundImage: "radial-gradient(circle at 20% 30%, white 1px, transparent 1px)", backgroundSize: "32px 32px" }} />
-        <div className="absolute -right-24 -top-24 w-96 h-96 rounded-full bg-accent/20 blur-3xl" />
-        <div className="relative max-w-6xl mx-auto px-4 sm:px-6 py-20 md:py-28">
-          <div className="max-w-2xl">
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary-foreground/10 text-primary-foreground/90 text-xs font-medium mb-6">
-              <Sparkles className="w-3.5 h-3.5" /> Welcome to {CHURCH.name}
+    <div className="min-h-screen bg-[#F8FAFC] text-slate-800 font-sans selection:bg-amber-500 selection:text-slate-950">
+      
+      {/* Navigation Header */}
+      <header className="absolute top-0 left-0 right-0 z-50 bg-transparent">
+        <div className="max-w-7xl mx-auto px-6 h-24 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="bg-[#1e293b]/90 backdrop-blur p-2.5 rounded-xl border border-white/10 shadow-lg">
+              <Building2 className="text-amber-500" size={24} />
             </div>
-            <h1 className="font-heading text-4xl md:text-6xl font-bold leading-[1.08] text-balance">
-              A community of faith, hope & love
-            </h1>
-            <p className="mt-6 text-lg text-primary-foreground/80 leading-relaxed max-w-xl">
-              We're a Seventh-day Adventist family worshiping, growing, and serving together in Nairobi. Wherever you are on your journey, there's a place for you here.
-            </p>
-            <div className="mt-8 flex flex-wrap gap-3">
-              <Button asChild size="lg" className="bg-accent text-accent-foreground hover:bg-accent/90">
-                <Link to="/contact">Plan your visit <ArrowRight className="w-4 h-4 ml-1.5" /></Link>
-              </Button>
-              <Button asChild size="lg" variant="outline" className="border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground/10 hover:text-primary-foreground">
-                <Link to="/sermons"><Play className="w-4 h-4 mr-1.5" /> Watch sermons</Link>
-              </Button>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Service times */}
-      <section className="max-w-6xl mx-auto px-4 sm:px-6 -mt-10 relative z-10">
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 bg-card rounded-2xl shadow-sm border border-border p-5 md:p-6">
-          {CHURCH.service_times.map((s) => (
-            <div key={s.label} className="flex items-start gap-3">
-              <div className="w-10 h-10 rounded-lg bg-secondary flex items-center justify-center shrink-0">
-                <Clock className="w-5 h-5 text-primary" />
-              </div>
-              <div>
-                <div className="text-xs text-muted-foreground font-medium">{s.day} · {s.time}</div>
-                <div className="font-heading font-semibold text-sm text-foreground">{s.label}</div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* Welcome */}
-      <section className="max-w-6xl mx-auto px-4 sm:px-6 py-16 md:py-20">
-        <div className="grid md:grid-cols-2 gap-10 items-center">
-          <div>
-            <div className="text-sm font-semibold text-accent uppercase tracking-wide">Our Welcome</div>
-            <h2 className="font-heading text-3xl md:text-4xl font-bold mt-2 text-balance">Come as you are, grow in Christ</h2>
-            <p className="mt-5 text-muted-foreground leading-relaxed">
-              At Grace, we believe church is more than a service — it's a family. We gather each Sabbath to worship God through song, Scripture, and fellowship, and we scatter through the week to serve our city with the love of Jesus.
-            </p>
-            <p className="mt-4 text-muted-foreground leading-relaxed">
-              Whether you're exploring faith for the first time or looking for a church home, you'll find warm people, honest teaching, and a community that cares.
-            </p>
-            <Button asChild variant="link" className="px-0 mt-4 text-primary">
-              <Link to="/about">Learn more about us <ArrowRight className="w-4 h-4 ml-1" /></Link>
-            </Button>
-          </div>
-          <div className="grid grid-cols-2 gap-4">
-            {[
-              { icon: Users, label: "Members", value: "180+" },
-              { icon: CalendarDays, label: "Weekly Services", value: "4" },
-              { icon: BookOpen, label: "Ministries", value: "11" },
-              { icon: Heart, label: "Years Serving", value: "25" },
-            ].map((s) => (
-              <div key={s.label} className="bg-card border border-border rounded-xl p-5">
-                <s.icon className="w-5 h-5 text-accent mb-3" />
-                <div className="font-heading text-2xl font-bold text-foreground">{s.value}</div>
-                <div className="text-sm text-muted-foreground">{s.label}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Ministries preview */}
-      <section className="bg-secondary/40 border-y border-border">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-16 md:py-20">
-          <div className="flex items-end justify-between mb-10 flex-wrap gap-4">
             <div>
-              <div className="text-sm font-semibold text-accent uppercase tracking-wide">Get Involved</div>
-              <h2 className="font-heading text-3xl md:text-4xl font-bold mt-2">Ministries for every season of life</h2>
+              <h1 className="font-bold text-base tracking-wide text-white">Mtwapa Central SDA</h1>
+              <p className="text-[10px] text-slate-400 font-semibold tracking-wider uppercase">CHURCH PLATFORM</p>
             </div>
-            <Button asChild variant="outline">
-              <Link to="/ministries">All ministries <ArrowRight className="w-4 h-4 ml-1" /></Link>
-            </Button>
           </div>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            {featured.map((m) => (
-              <Link key={m.slug} to={`/ministries/${m.slug}`} className="group bg-card rounded-xl p-6 border border-border hover:border-primary/40 hover:shadow-sm transition-all">
-                <div className="w-11 h-11 rounded-lg flex items-center justify-center mb-4" style={{ backgroundColor: m.color + "18" }}>
-                  <Users className="w-5 h-5" style={{ color: m.color }} />
-                </div>
-                <h3 className="font-heading font-semibold text-foreground group-hover:text-primary transition-colors">{m.name}</h3>
-                <p className="text-sm text-muted-foreground mt-1.5 leading-relaxed line-clamp-2">{m.description}</p>
-                <div className="mt-4 text-xs text-muted-foreground">{m.members_count} members · {m.meeting_day}</div>
-              </Link>
-            ))}
+
+          <nav className="hidden lg:flex items-center gap-8 text-sm font-medium text-slate-200">
+            <a href="#home" className="text-white hover:text-amber-400 transition">Home</a>
+            <Link to="/about" className="hover:text-white transition">About</Link>
+            <Link to="/ministries" className="hover:text-white transition">Ministries</Link>
+            <Link to="/events" className="hover:text-white transition">Events</Link>
+            <Link to="/music" className="hover:text-white transition">Music</Link>
+            <a href="#giving" className="hover:text-white transition">Giving</a>
+            <Link to="/contact" className="hover:text-white transition">Contact</Link>
+          </nav>
+
+          <div className="hidden lg:flex items-center gap-5">
+            <Link to="/portal" className="text-sm font-medium text-slate-200 hover:text-white transition">
+              Sign in
+            </Link>
+            <Link to="/portal" className="bg-[#c29b38] hover:bg-[#b08a2f] text-slate-950 font-bold text-sm px-5 py-2.5 rounded-lg shadow-md transition">
+              Member Portal
+            </Link>
+          </div>
+
+          <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="lg:hidden text-white p-2">
+            {mobileMenuOpen ? <X size={26} /> : <Menu size={26} />}
+          </button>
+        </div>
+
+        {mobileMenuOpen && (
+          <div className="lg:hidden bg-slate-900/95 backdrop-blur border-b border-slate-800 px-6 py-6 space-y-4 text-slate-200">
+            <a href="#home" className="block hover:text-white font-medium">Home</a>
+            <Link to="/about" className="block hover:text-white font-medium">About</Link>
+            <Link to="/ministries" className="block hover:text-white font-medium">Ministries</Link>
+            <Link to="/events" className="block hover:text-white font-medium">Events</Link>
+            <Link to="/music" className="block hover:text-white font-medium">Music</Link>
+            <a href="#giving" className="block hover:text-white font-medium">Giving</a>
+            <Link to="/contact" className="block hover:text-white font-medium">Contact</Link>
+            <div className="pt-4 border-t border-slate-800 flex flex-col gap-3">
+              <Link to="/portal" className="text-center py-2.5 font-medium border border-slate-700 rounded-lg">Sign in</Link>
+              <Link to="/portal" className="bg-[#c29b38] text-slate-950 text-center font-bold py-2.5 rounded-lg">Member Portal</Link>
+            </div>
+          </div>
+        )}
+      </header>
+
+      {/* Hero Header */}
+      <section id="home" className="relative min-h-[78vh] flex flex-col justify-end bg-[#071322] pt-32 pb-24 px-6 overflow-hidden">
+        <div className="absolute inset-0 z-0">
+          <div className="absolute inset-0 bg-gradient-to-t from-[#071322] via-[#071322]/70 to-[#0B1B30]/40 z-10"></div>
+          <img 
+            src="https://images.unsplash.com/photo-1543269865-cbf427effbad?auto=format&fit=crop&q=80&w=2000" 
+            alt="Mtwapa Central Congregation" 
+            className="w-full h-full object-cover object-center opacity-40 scale-105"
+          />
+        </div>
+
+        <div className="max-w-7xl w-full mx-auto relative z-20 space-y-6">
+          <div className="inline-flex items-center gap-2 bg-slate-800/70 backdrop-blur border border-slate-700/80 px-4 py-1.5 rounded-full text-xs font-medium text-slate-300">
+            <span className="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
+            Mtwapa Central Seventh-day Adventist Church · Kilifi South
+          </div>
+
+          <h2 className="text-5xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight text-white max-w-4xl leading-[1.08]">
+            A community of faith, hope & love
+          </h2>
+
+          <p className="text-lg sm:text-xl text-slate-300 max-w-2xl leading-relaxed">
+            We are a Seventh-day Adventist family worshiping, growing, and serving together in Mtwapa, Kilifi South. Wherever you are on your spiritual journey, there's a home for you here.
+          </p>
+
+          <div className="flex flex-wrap items-center gap-4 pt-2">
+            <Link to="/portal" className="bg-[#c29b38] hover:bg-[#b08a2f] text-slate-950 font-bold px-7 py-3.5 rounded-xl shadow-lg transition flex items-center gap-2.5">
+              Plan your visit <ArrowRight size={18} />
+            </Link>
+            <a href="#giving" className="bg-white/10 hover:bg-white/20 backdrop-blur border border-white/20 text-white font-semibold px-7 py-3.5 rounded-xl transition flex items-center gap-2.5">
+              <DollarSign size={18} className="text-emerald-400" /> Give Tithe & Offerings
+            </a>
           </div>
         </div>
       </section>
 
-      {/* Upcoming events */}
-      <section className="max-w-6xl mx-auto px-4 sm:px-6 py-16 md:py-20">
-        <div className="flex items-end justify-between mb-10 flex-wrap gap-4">
+      {/* Service Schedule Bar */}
+      <section className="relative z-30 max-w-7xl mx-auto px-6 -mt-10 mb-20">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 bg-white text-slate-900 rounded-2xl shadow-xl border border-slate-100 overflow-hidden divide-y sm:divide-y-0 sm:divide-x divide-slate-100">
+          <div className="p-6 flex items-start gap-4 hover:bg-slate-50 transition">
+            <div className="bg-slate-100 p-3 rounded-xl text-slate-700 mt-0.5"><Clock size={20} /></div>
+            <div>
+              <p className="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">Sabbath · 9:00 AM</p>
+              <h3 className="font-bold text-slate-900 text-lg">Sabbath School</h3>
+            </div>
+          </div>
+          <div className="p-6 flex items-start gap-4 hover:bg-slate-50 transition">
+            <div className="bg-slate-100 p-3 rounded-xl text-slate-700 mt-0.5"><Clock size={20} /></div>
+            <div>
+              <p className="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">Sabbath · 11:00 AM</p>
+              <h3 className="font-bold text-slate-900 text-lg">Divine Worship</h3>
+            </div>
+          </div>
+          <div className="p-6 flex items-start gap-4 hover:bg-slate-50 transition">
+            <div className="bg-slate-100 p-3 rounded-xl text-slate-700 mt-0.5"><Clock size={20} /></div>
+            <div>
+              <p className="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">Wednesday · 6:00 PM</p>
+              <h3 className="font-bold text-slate-900 text-lg">Prayer Meeting</h3>
+            </div>
+          </div>
+          <div className="p-6 flex items-start gap-4 hover:bg-slate-50 transition">
+            <div className="bg-slate-100 p-3 rounded-xl text-slate-700 mt-0.5"><Clock size={20} /></div>
+            <div>
+              <p className="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">Friday · 6:30 PM</p>
+              <h3 className="font-bold text-slate-900 text-lg">Vespers</h3>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Expanded Ministries Grid on Landing */}
+      <section id="ministries" className="max-w-7xl mx-auto px-6 py-20">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end mb-12 gap-4">
           <div>
-            <div className="text-sm font-semibold text-accent uppercase tracking-wide">What's Happening</div>
-            <h2 className="font-heading text-3xl md:text-4xl font-bold mt-2">Upcoming events</h2>
+            <span className="text-xs font-bold text-amber-600 uppercase tracking-widest">GET INVOLVED</span>
+            <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 mt-1">Ministries for every season of life</h2>
           </div>
-          <Button asChild variant="outline">
-            <Link to="/events">Full calendar <ArrowRight className="w-4 h-4 ml-1" /></Link>
-          </Button>
+          <Link to="/ministries" className="text-sm font-bold text-amber-600 hover:text-amber-700 flex items-center gap-1">
+            View All 10 Departments &rarr;
+          </Link>
         </div>
-        <div className="grid md:grid-cols-3 gap-5">
-          {upcoming.map((e) => (
-            <div key={e.title} className="bg-card border border-border rounded-xl overflow-hidden hover:shadow-sm transition-shadow">
-              <div className="h-2" style={{ backgroundColor: MINISTRIES.find((m) => m.name === e.ministry)?.color || "#2f6b54" }} />
-              <div className="p-5">
-                <div className="flex items-center gap-2 text-xs text-muted-foreground mb-3">
-                  <CalendarDays className="w-3.5 h-3.5" /> {formatDate(e.date)}
-                  <span>·</span> {e.time}
-                </div>
-                <h3 className="font-heading font-semibold text-foreground">{e.title}</h3>
-                <p className="text-sm text-muted-foreground mt-1.5 leading-relaxed line-clamp-2">{e.description}</p>
-                <div className="mt-4 flex items-center gap-1.5 text-xs text-muted-foreground">
-                  <MapPin className="w-3.5 h-3.5" /> {e.venue}
-                </div>
-              </div>
-            </div>
-          ))}
+
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4">
+            <div className="w-12 h-12 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center font-bold"><BookOpen size={22} /></div>
+            <h3 className="text-xl font-bold text-slate-900">Sabbath School</h3>
+            <p className="text-slate-600 text-sm leading-relaxed">Systematic Bible study and quarterly lesson discussions.</p>
+            <p className="text-xs font-semibold text-slate-400">Sabbath 9:00 AM</p>
+          </div>
+
+          <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4">
+            <div className="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center font-bold"><Users size={22} /></div>
+            <h3 className="text-xl font-bold text-slate-900">Adventist Youth (AY)</h3>
+            <p className="text-slate-600 text-sm leading-relaxed">Leadership, outdoor camps, and Pathfinder honors for youth.</p>
+            <p className="text-xs font-semibold text-slate-400">Sabbath 2:00 PM</p>
+          </div>
+
+          <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4">
+            <div className="w-12 h-12 rounded-xl bg-slate-100 text-slate-800 flex items-center justify-center font-bold"><Shield size={22} /></div>
+            <h3 className="text-xl font-bold text-slate-900">AMO (Men's Ministry)</h3>
+            <p className="text-slate-600 text-sm leading-relaxed">Spiritual leadership, mentorship, and brotherhood for men.</p>
+            <p className="text-xs font-semibold text-slate-400">Monthly Meetings</p>
+          </div>
+
+          <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4">
+            <div className="w-12 h-12 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center font-bold"><Heart size={22} /></div>
+            <h3 className="text-xl font-bold text-slate-900">Women's Ministries</h3>
+            <p className="text-slate-600 text-sm leading-relaxed">Nurturing women through prayer networks and family retreats.</p>
+            <p className="text-xs font-semibold text-slate-400">Monthly Gatherings</p>
+          </div>
+
+          <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4">
+            <div className="w-12 h-12 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center font-bold"><Music size={22} /></div>
+            <h3 className="text-xl font-bold text-slate-900">Music & Choir</h3>
+            <p className="text-slate-600 text-sm leading-relaxed">Leading divine service worship through choral hymns and praise.</p>
+            <p className="text-xs font-semibold text-slate-400">Fri Rehearsals 5:00 PM</p>
+          </div>
+
+          <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4">
+            <div className="w-12 h-12 rounded-xl bg-teal-50 text-teal-600 flex items-center justify-center font-bold"><Activity size={22} /></div>
+            <h3 className="text-xl font-bold text-slate-900">Health Ministries</h3>
+            <p className="text-slate-600 text-sm leading-relaxed">Promoting healthy living based on NEWSTART lifestyle principles.</p>
+            <p className="text-xs font-semibold text-slate-400">Quarterly Expos</p>
+          </div>
+
+          <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4">
+            <div className="w-12 h-12 rounded-xl bg-amber-100 text-amber-800 flex items-center justify-center font-bold"><Coins size={22} /></div>
+            <h3 className="text-xl font-bold text-slate-900">Stewardship</h3>
+            <p className="text-slate-600 text-sm leading-relaxed">Educating on faithful tithes, offerings, and sanctuary development.</p>
+            <p className="text-xs font-semibold text-slate-400">Monthly Seminars</p>
+          </div>
+
+          <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4">
+            <div className="w-12 h-12 rounded-xl bg-cyan-50 text-cyan-600 flex items-center justify-center font-bold"><Radio size={22} /></div>
+            <h3 className="text-xl font-bold text-slate-900">Communication</h3>
+            <p className="text-slate-600 text-sm leading-relaxed">Managing sound, live streaming, and digital announcements.</p>
+            <p className="text-xs font-semibold text-slate-400">Active Daily</p>
+          </div>
         </div>
       </section>
 
-      {/* Latest sermon + CTA */}
-      <section className="max-w-6xl mx-auto px-4 sm:px-6 pb-20">
-        <div className="grid md:grid-cols-2 gap-5">
-          <div className="bg-primary text-primary-foreground rounded-2xl p-8 md:p-10 relative overflow-hidden">
-            <div className="absolute -right-16 -bottom-16 w-64 h-64 rounded-full bg-accent/15 blur-2xl" />
-            <div className="relative">
-              <div className="text-xs font-semibold text-accent uppercase tracking-wide">Latest Sermon</div>
-              <h3 className="font-heading text-2xl font-bold mt-2">Living in the Light of Grace</h3>
-              <p className="text-primary-foreground/70 mt-2 text-sm">Pr. Samuel Mwangi · September 26, 2026</p>
-              <Button asChild className="mt-6 bg-accent text-accent-foreground hover:bg-accent/90">
-                <Link to="/sermons"><Play className="w-4 h-4 mr-1.5" /> Watch now</Link>
-              </Button>
+      {/* M-Pesa Giving Section */}
+      <section id="giving" className="max-w-7xl mx-auto px-6 py-16">
+        <div className="grid lg:grid-cols-12 gap-8 items-start">
+          
+          <div className="lg:col-span-7 bg-[#0f2744] text-white p-8 sm:p-10 rounded-3xl shadow-lg space-y-8">
+            <div className="space-y-4">
+              <span className="text-xs font-bold text-amber-400 uppercase tracking-widest bg-amber-400/10 px-3 py-1 rounded-full border border-amber-400/20">
+                FAITHFUL STEWARDSHIP
+              </span>
+              <h3 className="text-3xl sm:text-4xl font-extrabold tracking-tight">Support God's Work in Mtwapa</h3>
+              <p className="text-blue-200 text-sm leading-relaxed">
+                "Bring all the tithes into the storehouse, that there may be food in My house." — Malachi 3:10. You can give your tithes, combined offerings, and building fund directly via Safaricom M-Pesa STK Push.
+              </p>
+            </div>
+            <div className="bg-white/10 p-6 rounded-2xl border border-white/10 space-y-2">
+              <p className="text-xs text-amber-300 font-bold uppercase tracking-wider">M-Pesa Paybill / Till Number</p>
+              <p className="text-2xl font-extrabold text-white">Paybill: 247247 · Account: Mtwapa SDA</p>
             </div>
           </div>
-          <div className="bg-secondary border border-border rounded-2xl p-8 md:p-10 flex flex-col justify-center">
-            <BookOpen className="w-7 h-7 text-accent mb-4" />
-            <h3 className="font-heading text-2xl font-bold text-foreground">Bible study & prayer</h3>
-            <p className="text-muted-foreground mt-2 leading-relaxed">Join us midweek for deeper study and prayer. Everyone is welcome — bring your questions and your heart.</p>
-            <Button asChild variant="outline" className="mt-6 self-start">
-              <Link to="/contact">Join a study group</Link>
-            </Button>
+
+          <div className="lg:col-span-5 bg-white text-slate-900 rounded-3xl shadow-xl border border-slate-200 overflow-hidden">
+            <div className="bg-[#002B49] text-white p-5 border-b border-blue-900 flex justify-between items-center">
+              <h3 className="font-bold text-lg flex items-center gap-2">
+                <DollarSign className="text-emerald-400" size={20} /> M-Pesa Online Giving
+              </h3>
+              <span className="text-[10px] bg-emerald-500/20 text-emerald-300 border border-emerald-400/40 px-2 py-0.5 rounded font-bold uppercase tracking-wider">
+                Daraja 2.0
+              </span>
+            </div>
+
+            <div className="flex border-b border-slate-200 bg-slate-50 text-xs font-bold text-slate-600">
+              <button onClick={() => setGivingTab('tithe')} className={`flex-1 py-3 text-center border-b-2 transition ${givingTab === 'tithe' ? 'border-[#004B87] text-[#004B87] bg-white' : 'border-transparent'}`}>Tithe</button>
+              <button onClick={() => setGivingTab('offering')} className={`flex-1 py-3 text-center border-b-2 transition ${givingTab === 'offering' ? 'border-[#004B87] text-[#004B87] bg-white' : 'border-transparent'}`}>Offering</button>
+              <button onClick={() => setGivingTab('building')} className={`flex-1 py-3 text-center border-b-2 transition ${givingTab === 'building' ? 'border-[#004B87] text-[#004B87] bg-white' : 'border-transparent'}`}>Building Fund</button>
+            </div>
+
+            <div className="p-6">
+              {submitted && (
+                <div className="mb-4 bg-emerald-50 border border-emerald-200 text-emerald-800 p-3 rounded-lg text-sm flex items-center gap-2">
+                  <CheckCircle2 size={20} className="text-emerald-600 shrink-0" />
+                  <div>
+                    <p className="font-bold">STK Push Triggered!</p>
+                    <p className="text-xs">Prompt sent to phone to authorize payment.</p>
+                  </div>
+                </div>
+              )}
+
+              <form onSubmit={handleMpesaSubmit} className="space-y-4">
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Amount (KSh)</label>
+                  <input type="number" placeholder="1000" value={amount} onChange={(e) => setAmount(e.target.value)} className="w-full p-3 bg-slate-50 border border-slate-300 rounded-lg font-bold text-lg focus:outline-none focus:ring-2 focus:ring-[#004B87]" required />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">M-Pesa Phone Number</label>
+                  <input type="tel" placeholder="0712345678" value={phone} onChange={(e) => setPhone(e.target.value)} className="w-full p-3 bg-slate-50 border border-slate-300 rounded-lg font-medium focus:outline-none focus:ring-2 focus:ring-[#004B87]" required />
+                </div>
+                <button type="submit" className="w-full bg-[#008A4B] hover:bg-[#00733E] text-white font-bold py-3.5 rounded-lg transition shadow-md flex items-center justify-center gap-2">
+                  <Smartphone size={18} /> Send STK Push
+                </button>
+              </form>
+            </div>
           </div>
+
         </div>
       </section>
+
+      {/* Footer */}
+      <footer id="contact" className="bg-[#071322] text-slate-300 py-16 border-t border-slate-800">
+        <div className="max-w-7xl mx-auto px-6 grid md:grid-cols-3 gap-12">
+          <div className="space-y-4">
+            <div className="flex items-center gap-3">
+              <Building2 className="text-amber-500" size={24} />
+              <span className="font-bold text-white text-lg">Mtwapa Central SDA Church</span>
+            </div>
+            <p className="text-sm text-slate-400 leading-relaxed">
+              Proclaiming the everlasting gospel in Mtwapa, Kilifi South, Kenya.
+            </p>
+          </div>
+          <div>
+            <h4 className="font-bold text-white mb-4">Quick Links</h4>
+            <ul className="space-y-2 text-sm">
+              <li><Link to="/about" className="hover:text-white transition">About Us</Link></li>
+              <li><Link to="/ministries" className="hover:text-white transition">Ministries</Link></li>
+              <li><Link to="/events" className="hover:text-white transition">Events</Link></li>
+              <li><a href="#giving" className="hover:text-white transition">Giving</a></li>
+            </ul>
+          </div>
+          <div>
+            <h4 className="font-bold text-white mb-4">Visit Us</h4>
+            <p className="text-sm text-slate-400 leading-relaxed">
+              Mtwapa Town, Kilifi South, Kilifi County, Kenya
+            </p>
+            <div className="mt-4">
+              <Link to="/portal" className="text-amber-400 font-semibold text-sm hover:underline">
+                Member Portal Access &rarr;
+              </Link>
+            </div>
+          </div>
+        </div>
+      </footer>
+
     </div>
   );
 }

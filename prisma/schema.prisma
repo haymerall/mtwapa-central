@@ -1,0 +1,106 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  MEMBER
+  DEPT_LEADER
+  TREASURER
+  ELDER
+  ADMIN
+}
+
+enum PaymentStatus {
+  PENDING
+  SUCCESS
+  FAILED
+}
+
+enum DepartmentType {
+  SABBATH_SCHOOL
+  ADVENTIST_YOUTH
+  AMO
+  WOMENS_MINISTRIES
+  CHILDRENS_MINISTRY
+  MUSIC_CHOIR
+  HEALTH_MINISTRIES
+  STEWARDSHIP
+  PERSONAL_MINISTRIES
+  COMMUNICATION
+}
+
+model User {
+  id            String          @id @default(uuid())
+  fullName      String
+  phone         String          @unique
+  email         String?         @unique
+  role          Role            @default(MEMBER)
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+  rosters       DepartmentRoster[]
+  contributions Transaction[]
+}
+
+model Department {
+  id          String            @id @default(uuid())
+  type        DepartmentType    @unique
+  name        String
+  description String
+  leaderName  String
+  rosters     DepartmentRoster[]
+  reports     DepartmentReport[]
+  budgets     DepartmentBudget[]
+  createdAt   DateTime          @default(now())
+}
+
+model DepartmentRoster {
+  id           String     @id @default(uuid())
+  departmentId String
+  userId       String
+  roleTitle    String     // e.g., "Sabbath School Teacher", "Choir Director"
+  joinedAt     DateTime   @default(now())
+  department   Department @relation(fields: [departmentId], references: [id], onDelete: Cascade)
+  user         User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([departmentId, userId])
+}
+
+model DepartmentReport {
+  id           String     @id @default(uuid())
+  departmentId String
+  title        String
+  quarter      String     // e.g., "Q4 2026"
+  content      String
+  attendance   Int?
+  metricsJson  String?    // JSON store for department-specific stats
+  submittedAt  DateTime   @default(now())
+  department   Department @relation(fields: [departmentId], references: [id], onDelete: Cascade)
+}
+
+model DepartmentBudget {
+  id           String     @id @default(uuid())
+  departmentId String
+  fiscalYear   Int        @default(2026)
+  allocatedKsh Float
+  spentKsh     Float      @default(0.0)
+  department   Department @relation(fields: [departmentId], references: [id], onDelete: Cascade)
+}
+
+model Transaction {
+  id              String        @id @default(uuid())
+  userId          String?
+  merchantReqId   String?
+  checkoutReqId   String?       @unique
+  mpesaRef        String?       @unique
+  amount          Float
+  phone           String
+  category        String        // Tithe, Offering, Building Fund, etc.
+  status          PaymentStatus @default(PENDING)
+  createdAt       DateTime      @default(now())
+  user            User?         @relation(fields: [userId], references: [id])
+}
